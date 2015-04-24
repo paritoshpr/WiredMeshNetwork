@@ -112,12 +112,13 @@ public void  deltint( )
 public message  out( )
 {
 	String destName = "WN"+currentpacket_dest;
+	message  m = new message();
    if(destName.equals(myName)){
 	   //packet has reached destination!
 	   //System.out.println("Recieved packet from : "+currentpacket_source+"\n");
    }
    else{
-	   message  m = new message();
+	   
 	   String gateOut = "out1";
 	   if(routingType.equals("hotpotato")){
 		   Random rand = new Random();
@@ -134,30 +135,34 @@ public message  out( )
 	   else if(routingType.equals("manhattan"))
 	   {   //routing logic
 		   
-		   int direction=currentpacket_dest-MYNUMBER;
-		   if( direction >= length){
+		   int direction = (int)(currentpacket_dest/length)-(int)(MYNUMBER/length);
+		   int lin_dir= currentpacket_dest-MYNUMBER;
+		   if( direction > 0){
 			   //send down
 			   gateOut = "out"+4;
 		   }
-		   else if((-direction) >= length){
+		   else if((-direction) > 0){
 			   //send up
 			   gateOut = "out"+2;
 		   }
-		   else if(direction < length && direction >0){
-			   //send right
-			   gateOut = "out"+1;
-		   }
-		   else if((-direction) < length && (-direction) >0){
-			   //send left
-			   gateOut = "out"+3;
+		   else{
+			   
+			   if(lin_dir < length && lin_dir >0){
+				   //send right
+				   gateOut = "out"+1;
+			   }
+			   else if((-lin_dir) < length && (-lin_dir) >0){
+				   //send left
+				   gateOut = "out"+3;
+			   }
 		   }
 	   }
 	   
 	   content con = makeContent(gateOut, new packetEntity("packet:"+currentpacket_source+":"+currentpacket_dest, currentpacket_source,currentpacket_dest));
 	   m.add(con);
-	   return m;
+	   //return m;
    }
-   return null;
+   return m;
 }
 
 

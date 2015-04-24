@@ -3,10 +3,13 @@ package WiredMeshNetworkSim;
 
 
 
+
 import simView.*;
+import statistics.rand;
 
 import java.awt.*;
 import java.io.*;
+
 import genDevs.modeling.*;
 import genDevs.simulation.*;
 import GenCol.*;
@@ -32,6 +35,8 @@ public class Man22WMS extends ViewableDigraph{
 	private int LENGTH =2;
 	private int BREADTH = 2;
 	private int NUMNODES = LENGTH*BREADTH; 
+	protected rand r;
+	private double pg_time_base=4;
 	public Man22WMS(){
     this("WiredMeshNetwork");
 }
@@ -44,7 +49,7 @@ public Man22WMS(String nm){
 public void WiredMeshSysConstruct(){
 
     this.addOutport("out");
-    
+    r = new rand(123987979);
     ViewableAtomic [] Node = new ViewableAtomic[NUMNODES];
     ViewableAtomic [] PG = new ViewableAtomic[NUMNODES];
     
@@ -63,45 +68,48 @@ public void WiredMeshSysConstruct(){
 	{
 		for(int j = 1;j<= LENGTH; j++)
 			{
-				int nodeNum=(i-1)*LENGTH+(j);
-				int nodeIdx = nodeNum-1;
-				
+				int nodeNum=(i-1)*LENGTH+(j-1);
+				int nodeIdx = nodeNum;
+				int gen_time= 2;
+				//double proc_time=1+r.uniform(gen_time);
+				double proc_time = 2;
+				pg_time_base= 1+r.uniform(gen_time);
 				if(i==1){
 					if(j==1){
-						Node[nodeIdx]=new WiredNode(nodeNum,2,new int[]{1,4},routingtype,2,LENGTH);
+						Node[nodeIdx]=new WiredNode(nodeNum,2,new int[]{1,4},routingtype,proc_time,LENGTH);
 					}
 					else if(j==LENGTH){
-						Node[nodeIdx]=new WiredNode(nodeNum,2,new int[]{3,4},routingtype,2,LENGTH);
+						Node[nodeIdx]=new WiredNode(nodeNum,2,new int[]{3,4},routingtype,proc_time,LENGTH);
 					}
 					else{
-						Node[nodeIdx]=new WiredNode(nodeNum,3,new int[]{1,3,4},routingtype,2,LENGTH);
+						Node[nodeIdx]=new WiredNode(nodeNum,3,new int[]{1,3,4},routingtype,proc_time,LENGTH);
 					}
 				}
 				else if(i== BREADTH){
 					if(j==1){
-						Node[nodeIdx]=new WiredNode(nodeNum,2,new int[]{1,2},routingtype,2,LENGTH);
+						Node[nodeIdx]=new WiredNode(nodeNum,2,new int[]{1,2},routingtype,proc_time,LENGTH);
 					}
 					else if(j==LENGTH){
-						Node[nodeIdx]=new WiredNode(nodeNum,2,new int[]{2,3},routingtype,2,LENGTH);
+						Node[nodeIdx]=new WiredNode(nodeNum,2,new int[]{2,3},routingtype,proc_time,LENGTH);
 					}
 					else{
-						Node[nodeIdx]=new WiredNode(nodeNum,3,new int[]{1,2,3},routingtype,2,LENGTH);
+						Node[nodeIdx]=new WiredNode(nodeNum,3,new int[]{1,2,3},routingtype,proc_time,LENGTH);
 					}
 				}
 				else{
 					if(j==1){
-						Node[nodeIdx]=new WiredNode(nodeNum,3,new int[]{1,2,4},routingtype,2,LENGTH);
+						Node[nodeIdx]=new WiredNode(nodeNum,3,new int[]{1,2,4},routingtype,proc_time,LENGTH);
 					}
 					else if(j==LENGTH){
-						Node[nodeIdx]=new WiredNode(nodeNum,3,new int[]{2,3,4},routingtype,2,LENGTH);
+						Node[nodeIdx]=new WiredNode(nodeNum,3,new int[]{2,3,4},routingtype,proc_time,LENGTH);
 					}
 					else{
-						Node[nodeIdx]=new WiredNode(nodeNum,4,new int[]{1,2,3,4},routingtype,2,LENGTH);
+						Node[nodeIdx]=new WiredNode(nodeNum,4,new int[]{1,2,3,4},routingtype,proc_time,LENGTH);
 					}
 				}
 		    	
 		    	
-		    	PG[nodeIdx]=new PacketGenerator(nodeNum,1,NUMNODES);//nodeId,period,NUMNODES
+		    	PG[nodeIdx]=new PacketGenerator(nodeNum,pg_time_base,NUMNODES);//nodeId,period,NUMNODES
 		    	add(Node[nodeIdx]);
 		    	add(PG[nodeIdx]);
 		    	addCoupling(PG[nodeIdx],"out",Node[nodeIdx],"in");
@@ -164,7 +172,7 @@ public void WiredMeshSysConstruct(){
 				}
 		}
     
-   
+    
    
 }
 
@@ -175,22 +183,22 @@ public void WiredMeshSysConstruct(){
      */
     public void layoutForSimView()
     {
-        preferredSize = new Dimension(934, 453);
-        if((ViewableComponent)withName("PG2")!=null)
-             ((ViewableComponent)withName("PG2")).setPreferredLocation(new Point(283, 210));
+        preferredSize = new Dimension(1267, 582);
         if((ViewableComponent)withName("PG1")!=null)
-             ((ViewableComponent)withName("PG1")).setPreferredLocation(new Point(95, 212));
-        if((ViewableComponent)withName("WN3")!=null)
-             ((ViewableComponent)withName("WN3")).setPreferredLocation(new Point(99, 279));
-        if((ViewableComponent)withName("WN1")!=null)
-             ((ViewableComponent)withName("WN1")).setPreferredLocation(new Point(95, 164));
-        if((ViewableComponent)withName("WN4")!=null)
-             ((ViewableComponent)withName("WN4")).setPreferredLocation(new Point(285, 280));
+             ((ViewableComponent)withName("PG1")).setPreferredLocation(new Point(173, 61));
         if((ViewableComponent)withName("WN2")!=null)
-             ((ViewableComponent)withName("WN2")).setPreferredLocation(new Point(283, 165));
+             ((ViewableComponent)withName("WN2")).setPreferredLocation(new Point(4, 133));
+        if((ViewableComponent)withName("WN1")!=null)
+             ((ViewableComponent)withName("WN1")).setPreferredLocation(new Point(171, 14));
+        if((ViewableComponent)withName("WN3")!=null)
+             ((ViewableComponent)withName("WN3")).setPreferredLocation(new Point(174, 133));
+        if((ViewableComponent)withName("PG2")!=null)
+             ((ViewableComponent)withName("PG2")).setPreferredLocation(new Point(4, 179));
+        if((ViewableComponent)withName("WN0")!=null)
+             ((ViewableComponent)withName("WN0")).setPreferredLocation(new Point(5, 17));
+        if((ViewableComponent)withName("PG0")!=null)
+             ((ViewableComponent)withName("PG0")).setPreferredLocation(new Point(4, 64));
         if((ViewableComponent)withName("PG3")!=null)
-             ((ViewableComponent)withName("PG3")).setPreferredLocation(new Point(99, 326));
-        if((ViewableComponent)withName("PG4")!=null)
-             ((ViewableComponent)withName("PG4")).setPreferredLocation(new Point(285, 327));
+             ((ViewableComponent)withName("PG3")).setPreferredLocation(new Point(175, 181));
     }
 }

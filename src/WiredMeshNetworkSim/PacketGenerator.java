@@ -30,7 +30,7 @@ public PacketGenerator(int mynumber, double period, int numnodes){
    super("PG"+mynumber);
    addInport("in");
    addOutport("out");
-   
+   r = new rand(123987979);
    
    MYNUMBER = mynumber;
    numberOfNodes = numnodes;
@@ -39,7 +39,7 @@ public PacketGenerator(int mynumber, double period, int numnodes){
 
 public void initialize(){
    holdIn("active", int_gen_time);
-   r = new rand(123987979);
+  
    count = 0;
 }
 
@@ -60,8 +60,8 @@ public void  deltint( )
 
 if(phaseIs("active")){
    count = count +1;
-//   holdIn("active",int_gen_time);
-   holdIn("active",6+r.uniform(int_gen_time));
+   holdIn("active",int_gen_time);
+   //holdIn("active",1+r.uniform(int_gen_time));
 }
 else passivate();
 }
@@ -76,7 +76,7 @@ public message  out( )
   //generate random destination
   do{
 	  Random rand = new Random();
-	  randomNum = rand.nextInt(numberOfNodes) + 1;
+	  randomNum = rand.nextInt(numberOfNodes);
   }while(randomNum==MYNUMBER);
   
   int currentpacket_dest = randomNum; //random destination
